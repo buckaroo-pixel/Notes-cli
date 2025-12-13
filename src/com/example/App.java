@@ -26,25 +26,42 @@ public class App {
                 store.list();
                 break;
             }
+            case "count": {
+                store.count();
+                break;
+            }
+            case "rm": {
+                String idStr = getArgValue(args, "--id");
+                if (idStr == null) {
+                    System.out.println("Missing --id");
+                    printUsage();
+                    return;
+                }
+                try {
+                    int id = Integer.parseInt(idStr);
+                    store.remove(id);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid id");
+                }
+                break;
+            }
             default:
                 System.out.println("Unknown command: " + cmd);
                 printUsage();
         }
     }
 
-    // Поддерживает оба формата:
-    // 1) --key=value
-    // 2) --key value
+    // поддерживает:
+    // --key=value
+    // --key value
     private static String getArgValue(String[] args, String key) {
         for (int i = 0; i < args.length; i++) {
             String a = args[i];
 
-            // --key=value
             if (a.startsWith(key + "=")) {
                 return a.substring((key + "=").length());
             }
 
-            // --key value
             if (a.equals(key) && i + 1 < args.length) {
                 return args[i + 1];
             }
@@ -54,7 +71,9 @@ public class App {
 
     private static void printUsage() {
         System.out.println("Usage:");
-        System.out.println("  --cmd=add  --text=\"...\"");
+        System.out.println("  --cmd=add   --text=\"...\"");
         System.out.println("  --cmd=list");
+        System.out.println("  --cmd=count");
+        System.out.println("  --cmd=rm    --id=N");
     }
 }
