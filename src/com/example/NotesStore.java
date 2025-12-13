@@ -45,6 +45,35 @@ public class NotesStore {
         }
     }
 
+    // count
+    public void count() {
+        System.out.println(readAll().size());
+    }
+
+    // rm
+    public void remove(int id) {
+        List<String> notes = readAll();
+        boolean removed = false;
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
+            for (String note : notes) {
+                if (note.startsWith(id + ";")) {
+                    removed = true;
+                    continue;
+                }
+                writer.write(note);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error updating notes");
+            return;
+        }
+
+        if (!removed) {
+            System.out.println("Not found #" + id);
+        }
+    }
+
     // ---------- helpers ----------
 
     private List<String> readAll() {
